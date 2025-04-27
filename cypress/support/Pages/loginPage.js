@@ -8,8 +8,8 @@ class LogInPage{
     getLogInButton() {
         return cy.get('#login-button',{timeout:15000})
     }
-    getFailedLoginAlert() {
-        return cy.get('div[data-cy="loginError"]',{timeout:15000})
+    getLoginErrorMessage() {
+        return cy.get('h3[data-test="error"]',{timeout:15000})
     }
 }
 export default LogInPage

@@ -8,7 +8,7 @@ describe('Login tests', { tags: ['@smoke'], cases: [1] }, () => {
         cy.visit(Cypress.env('baseURL'))
     })
 
-    it.only('Valid login', {cases: [1] }, () => {
+    it('Valid login', {cases: [1] }, () => {
         loginPage.getUsernameInput().should('be.visible').type(Cypress.env('username'));
         loginPage.getPasswordInput().should('be.visible').type(Cypress.env('password'));
         loginPage.getLogInButton().should('be.visible').click();
@@ -26,8 +26,8 @@ describe('Login tests', { tags: ['@smoke'], cases: [1] }, () => {
         loginPage.getUsernameInput().should('be.visible').type('wrongUsername');
         loginPage.getPasswordInput().should('be.visible').type('wrongPassword');
         loginPage.getLogInButton().should('be.visible').click();
-        loginPage.getFailedLoginAlert().should('be.visible').and('exist').invoke('text').then((failedLoginText) => {
-            expect(failedLoginText.trim()).to.contain('Failed to sign in! Please check your credentials and try again.')
+        loginPage.getLoginErrorMessage().should('be.visible').and('exist').invoke('text').then((failedLoginText) => {
+            expect(failedLoginText.trim()).to.contain('Epic sadface: Username and password do not match any user in this service')
         })
     })
 })
