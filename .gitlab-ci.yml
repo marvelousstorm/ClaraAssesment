@@ -13,6 +13,8 @@ cypress-run:
     - npm install js-yaml
   script:
     - eval $(node parse-suite.js)
+    - echo $SUITES
+    - echo $CONFIG_FILE
     - npm start &
     - npx cypress run --spec "$SUITES" --config-file "$CONFIG_FILE" -b chrome  # run Cypress tests
   rules:
