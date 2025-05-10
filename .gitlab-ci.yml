@@ -1,15 +1,21 @@
+variables:
+  CONFIG_FILE: null
+  SUITES: null
 stages:
   - test
 
 cypress-run:
   stage: test
-  image: alpine  # Cypress official docker image with browsers
+  image: cypress/browsers:22.12.0  # Cypress official docker image with browsers
   script:
-    - npm ci            # clean install dependencies
-    - npx cypress run --spec "cypress/e2e/Smoke/login.cy.js" --config-file cypress.config-prod.js -b chrome   # run Cypress tests
+    - npm install  # clean install dependencies
+    - npm start &
+    - npx cypress run --spec "cypress/e2e/Smoke/login.cy.js" --config-file "$CONFIG_FILE" -b chrome  # run Cypress tests
+  rules:
+    - when: manual
   artifacts:
-    when: always
+    when: on_failure
     paths:
       - cypress/videos  # save videos if test fails
       - cypress/screenshots  # save screenshots on errors
-    expire_in: 1 week
+    expire_in: 1 day
