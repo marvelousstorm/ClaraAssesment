@@ -3,9 +3,10 @@ stages:
 
 cypress-run:
   stage: test
-  image: alpine  # Cypress official docker image with browsers
+  image: cypress/browsers:22.12.0  # Cypress official docker image with browsers
   script:
     - npm ci  # clean install dependencies
+    - npm start &
     - npx cypress run --spec "cypress/e2e/Smoke/login.cy.js" --config-file cypress.config-prod.js -b chrome  # run Cypress tests
 
   artifacts:
