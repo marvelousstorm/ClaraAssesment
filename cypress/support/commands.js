@@ -17,19 +17,3 @@ Cypress.Commands.add("login", function (url, username, password) {
     homePage.getShoppingCartIcon().should('exist').and('be.visible')
     homePage.getProductsortContainer().should('exist').and('be.visible')
 })
-Cypress.Commands.add("numericalBubbleSort",function(arr){
-    let n = arr.length;
-  let swapped;
-
-  do {
-    swapped = false;
-    for (let i = 0; i < n - 1; i++) {
-      if (arr[i] < arr[i + 1]) {
-        [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
-        swapped = true;
-      }
-    }
-    n--; 
-  } while (swapped);
-  return arr;
-})

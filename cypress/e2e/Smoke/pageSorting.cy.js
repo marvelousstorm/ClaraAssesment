@@ -15,28 +15,12 @@ function waitUntilSortingIsCompleted(itemBeforeSorting, interation = 0, maxItera
         }
     })
 }
-function bubbleSortAlphabetical(arr) {
-    let n = arr.length;
-    let swapped;
-    do {
-      swapped = false;
-      for (let i = 0; i < n - 1; i++) {
-        if (arr[i].localeCompare(arr[i + 1]) < 0) {
-          [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
-          swapped = true;
-        }
-      }
-      n--;
-    } while (swapped);
-  
-    return arr;
-  }
-describe('Login tests', { tags: ['@smoke'], cases: [1] }, () => {
+describe('Sorting home page tests', { tags: ['@smoke']}, () => {
     beforeEach(() => {
         cy.login(Cypress.env('baseURL'), Cypress.env('username'), Cypress.env('password'))
     })
 
-    it('Sort by name "Z to A" and "A to Z"', { cases: [1] }, () => {
+    it('Sort by name "Z to A" and "A to Z"', { cases: [3] }, () => {
         homePage.getProductsortContainer().should('be.visible').invoke('val').then((val) => {
             homePage.getProductNames().first().invoke('text').then((itemBeforeSorting) => {
                 if (val !== 'az') {
@@ -51,7 +35,7 @@ describe('Login tests', { tags: ['@smoke'], cases: [1] }, () => {
             productNamesBeforeSorting.push(product.text())
         })
         cy.get('@productNames').then((productNames) => {
-            let productNamesSorted = bubbleSortAlphabetical(productNames)
+            let productNamesSorted = homePage.bubbleSortAlphabetical(productNames)
             cy.wrap(productNamesSorted).as('productNamesSorted')
         })
         //Sorting elements Z to A
@@ -87,7 +71,7 @@ describe('Login tests', { tags: ['@smoke'], cases: [1] }, () => {
             })
         })
     })
-    it.only('Sort by price "high to low" and "low to high"', { cases: [1] }, () => {
+    it('Sort by price "high to low" and "low to high"', { cases: [4] }, () => {
         homePage.getProductsortContainer().should('be.visible').invoke('val').then((val) => {
             homePage.getProductNames().first().invoke('text').then((itemBeforeSorting) => {
                 if (val !== 'lohi') {
@@ -96,45 +80,45 @@ describe('Login tests', { tags: ['@smoke'], cases: [1] }, () => {
                 }
             })
         })
-        let productNamesBeforeSorting = []
-        cy.wrap(productNamesBeforeSorting).as('productNames')
-        homePage.getInvetoryItemPrice().each((product) => {
-            productNamesBeforeSorting.push(product.text())
+        let pricesBeforeSorting = []
+        cy.wrap(pricesBeforeSorting).as('productPrices')
+        homePage.getInvetoryItemPrice().each((prices) => {
+            pricesBeforeSorting.push(parseFloat(prices.text().replace(/[^0-9.]/g, '')))
         })
-        cy.get('@productNames').then((productNames) => {
-            let productNamesSorted = cy.numericalBubbleSort(productNames)
-            cy.wrap(productNamesSorted).as('productNamesSorted')
+        cy.get('@productPrices').then((productPrices) => {
+            let productPricesSorted = homePage.bubbleSortNumerical(productPrices)
+            cy.wrap(productPricesSorted).as('productPricesSorted')
         })
-        //Sorting elements Z to A
+    //     //Sorting elements Z to A
         homePage.getInvetoryItemPrice().first().invoke('text').then((itemBeforeSorting) => {
             homePage.getProductsortContainer().select('hilo')
             waitUntilSortingIsCompleted(itemBeforeSorting)
         })
-        let productNamesAfterSorting = []
-        cy.wrap(productNamesAfterSorting).as('productNamesAfterSorting')
-        homePage.getInvetoryItemPrice().each((product) => {
-            productNamesAfterSorting.push(product.text())
+        let productPricesAfterSorting = []
+        cy.wrap(productPricesAfterSorting).as('productPricesAfterSorting')
+        homePage.getInvetoryItemPrice().each((prices) => {
+            productPricesAfterSorting.push(parseFloat(prices.text().replace(/[^0-9.]/g, '')))
         })
-        cy.get('@productNamesSorted').then((productNamesSorted) => {
-            cy.get('@productNamesAfterSorting').then((productNamesAfterSorting)=>{
-                cy.wrap(productNamesSorted).should('deep.equal',productNamesAfterSorting)
+        cy.get('@productPricesSorted').then((productPricesSorted) => {
+            cy.get('@productPricesAfterSorting').then((productPricesAfterSorting)=>{
+                cy.wrap(productPricesSorted).should('deep.equal',productPricesAfterSorting)
             })
         })
-        //Sorting elements A to Z
+    //     //Sorting elements A to Z
         homePage.getInvetoryItemPrice().first().invoke('text').then((itemBeforeSorting) => {
             homePage.getProductsortContainer().select('lohi')
             waitUntilSortingIsCompleted(itemBeforeSorting)
-            productNamesAfterSorting = []
+            productPricesAfterSorting = []
         })
-        homePage.getInvetoryItemPrice().each((product) => {
-            productNamesAfterSorting.push(product.text())
+        homePage.getInvetoryItemPrice().each((prices) => {
+            productPricesAfterSorting.push(parseFloat(prices.text().replace(/[^0-9.]/g, '')))
         })
-        cy.get('@productNames').then((productNamesBeforeSorting) => {
-            cy.get('@productNamesAfterSorting').then((productNamesAfterSorting) => {
-                for(let i= 0;i<productNamesAfterSorting.length;i++){
-                    cy.log(productNamesAfterSorting[i])
+        cy.get('@productPrices').then((pricesBeforeSorting) => {
+            cy.get('@productPricesAfterSorting').then((productPricesAfterSorting) => {
+                for(let i= 0;i<productPricesAfterSorting.length;i++){
+                    cy.log(productPricesAfterSorting[i])
                 }
-                cy.wrap(productNamesBeforeSorting).should('deep.equal',productNamesAfterSorting)
+                cy.wrap(pricesBeforeSorting).should('deep.equal',productPricesAfterSorting)
             })
         })
     })
