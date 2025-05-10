@@ -5,9 +5,9 @@ cypress-run:
   stage: test
   image: alpine  # Cypress official docker image with browsers
   script:
-    - npm ci            # clean install dependencies
-    - echo "The value of MY_VARIABLE is: $CONFIG_FILE"
-    - npx cypress run --spec "cypress/e2e/Smoke/login.cy.js" --config-file $CONFIG_FILE -b chrome   # run Cypress tests
+    - npm ci  # clean install dependencies
+    - npx cypress run --spec "cypress/e2e/Smoke/login.cy.js" --config-file="cypress.config-prod.js" -b chrome  # run Cypress tests
+
   artifacts:
     when: always
     paths:
