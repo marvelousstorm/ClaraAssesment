@@ -6,7 +6,7 @@ cypress-run:
   image: alpine  # Cypress official docker image with browsers
   script:
     - npm ci  # clean install dependencies
-    - npx cypress run --spec "cypress/e2e/Smoke/login.cy.js" --config-file="cypress.config-prod.js" -b chrome  # run Cypress tests
+    - npx cypress run --spec "cypress/e2e/Smoke/login.cy.js" --config-file cypress.config-prod.js -b chrome  # run Cypress tests
 
   artifacts:
     when: always
