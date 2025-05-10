@@ -1,3 +1,6 @@
+variables:
+  CONFIG_FILE: null
+  SUITES: null
 stages:
   - test
 
@@ -7,10 +10,11 @@ cypress-run:
   script:
     - npm install  # clean install dependencies
     - npm start &
-    - npx cypress run --spec "cypress/e2e/Smoke/login.cy.js" --config-file cypress.config-prod.js -b chrome  # run Cypress tests
-
+    - npx cypress run --spec "cypress/e2e/Smoke/login.cy.js" --config-file "$CONFIG_FILE" -b chrome  # run Cypress tests
+  rules:
+    - when: manual
   artifacts:
-    when: always
+    when: on_failure
     paths:
       - cypress/videos  # save videos if test fails
       - cypress/screenshots  # save screenshots on errors
