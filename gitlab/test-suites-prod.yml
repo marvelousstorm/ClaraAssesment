@@ -1,0 +1,4 @@
+suites:
+  smoke:
+    configFile: "cypress.config-stage.js"
+    spec: "cypress/e2e/Smoke/*.cy.js"
