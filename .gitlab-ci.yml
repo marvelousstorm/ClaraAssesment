@@ -1,16 +1,22 @@
 variables:
-  CONFIG_FILE: null
-  SUITES: null
+  ENV: prod
+  SUITE_NAME: smoke 
 stages:
   - test
 
 cypress-run:
   stage: test
   image: cypress/browsers:22.12.0  # Cypress official docker image with browsers
+  before_script:
+    - apt-get update && apt-get install -y curl git
+    - npm install
+    - npm install js-yaml
   script:
-    - npm install  # clean install dependencies
+    - eval $(node parse-suite.js)
+    - echo "$SUITES"
+    - echo "$CONFIG_FILE"
     - npm start &
-    - npx cypress run --spec "cypress/e2e/Smoke/login.cy.js" --config-file "$CONFIG_FILE" -b chrome  # run Cypress tests
+    - npx cypress run --spec "$SUITES" --config-file "$CONFIG_FILE" -b chrome  # run Cypress tests
   rules:
     - when: manual
   artifacts:
