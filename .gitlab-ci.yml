@@ -1,12 +1,3 @@
-variables:
-    TEST_SUITES:
-      description: "Enter the suites name"
-      value: "Smoke"
-    CONFIG_FILE:
-      description: "Please select rsepective config file"
-      options:
-        - "config-stage.yml"
-        - "config-prod.yml"
 stages:
   - test
 
@@ -15,7 +6,7 @@ cypress-run:
   image: alpine  # Cypress official docker image with browsers
   script:
     - npm ci            # clean install dependencies
-    - npx cypress run --spec "cypress/e2e/Smoke/login.cy.js" --config-file cypress.config-prod.js -b chrome   # run Cypress tests
+    - npx cypress run --spec "cypress/e2e/Smoke/login.cy.js" --config-file $CONFIG_FILE -b chrome   # run Cypress tests
   artifacts:
     when: always
     paths:
