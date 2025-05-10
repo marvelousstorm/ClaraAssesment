@@ -1,3 +1,12 @@
+variables:
+  TEST_SUITES:
+    description: "Enter the suites name"
+    value: "Smoke"
+  CONFIG_FILE:
+    description: "Please select rsepective config file"
+    options:
+      - "config-stage.yml"
+      - "config-prod.yml"
 stages:
   - test
 
