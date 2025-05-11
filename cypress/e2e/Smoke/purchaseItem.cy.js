@@ -2,11 +2,13 @@ import HomePage from "../../support/Pages/homePage";
 import CartPage from "../../support/Pages/cartPage";
 import FirstCheckoutPage from "../../support/Pages/firstCheckoutPage";
 import SecondCheckoutPage from "../../support/Pages/secondCheckoutPage";
+import FinishOrderPage from "../../support/Pages/finishOrderPage";
 
 const homePage = new HomePage();
 const cartPage = new CartPage();
 const firstCheckoutPage = new FirstCheckoutPage();
 const secondCheckoutPage = new SecondCheckoutPage();
+const finishOrderPage = new FinishOrderPage();
 let firstItem, secondItem, buyer, testD
 const URL = Cypress.env('baseURL')
 const username = Cypress.env('username')
@@ -127,5 +129,12 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
             })
         })
         secondCheckoutPage.getFinishButton().should('be.visible').click()
+        cy.url().should('include','checkout-complete')
+        firstCheckoutPage.getTitle().should('exist').and('be.visible').invoke('text').then((checkoutTitle) => {
+            expect(checkoutTitle.trim()).to.include('Checkout: Complete!')
+        })
+        finishOrderPage.getSuccesfullPurchaseMessage().should('be.visible').invoke('text').then((sucessfullMessage)=>{
+            expect(sucessfullMessage).to.include('Thank you for your order!')
+        })
     })
 })
