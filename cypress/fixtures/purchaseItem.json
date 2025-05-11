@@ -1,10 +1,20 @@
 {
     "stage": {
         "firstItemToPurchase": "Sauce Labs Backpack",
-        "secondItemToPurchase": "Sauce Labs Bike Light"
+        "secondItemToPurchase": "Sauce Labs Bike Light",
+        "buyer":{
+            "firstName":"Cesar",
+            "lastName":"Rosales",
+            "zip":"54150"
+        }
     },
     "production": {
         "firstItemToPurchase": "Sauce Labs Backpack",
-        "secondItemToPurchase": "Sauce Labs Bike Light"
+        "secondItemToPurchase": "Sauce Labs Bike Light",
+        "buyer":{
+            "firstName":"Cesar",
+            "lastName":"Rosales",
+            "zip":"54150"
+        }
     }
 }
