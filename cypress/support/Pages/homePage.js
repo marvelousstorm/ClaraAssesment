@@ -17,6 +17,9 @@ class HomePage {
     getInvetoryItemPrice() {
         return cy.get('.inventory_item_price', { timeout: 15000 })
     }
+    getAddToCartButton(item) {
+        return cy.get(`div.inventory_item_description:contains("${item}") #add-to-cart-sauce-labs-backpack`, { timeout: 15000 })
+    }
     bubbleSortNumerical(arr) {
         let n = arr.length;
         let swapped;
