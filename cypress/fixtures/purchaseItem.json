@@ -1,8 +1,10 @@
 {
     "stage": {
-        "itemToPurchase": "Sauce Labs Backpack"
+        "firstItemToPurchase": "Sauce Labs Backpack",
+        "secondItemToPurchase": "Sauce Labs Bike Light"
     },
     "production": {
-        "itemToPurchase": "Sauce Labs Backpack"
+        "firstItemToPurchase": "Sauce Labs Backpack",
+        "secondItemToPurchase": "Sauce Labs Bike Light"
     }
 }
