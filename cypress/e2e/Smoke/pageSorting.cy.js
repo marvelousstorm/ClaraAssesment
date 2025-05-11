@@ -1,6 +1,9 @@
 import HomePage from "../../support/Pages/homePage"
 
 const homePage = new HomePage();
+const URL=Cypress.env('baseURL')
+const username = Cypress.env('username')
+const password = Cypress.env('password')
 /* This funcion waits until sorting is completed, it checks that the first element text must not be equal after sorting,
     so once it is different it lets the program continue, if not, it will wait 500 ms to check again and will repeat 5 times*/
 function waitUntilSortingIsCompleted(itemBeforeSorting, interation = 0, maxIterations = 5) {
@@ -17,7 +20,7 @@ function waitUntilSortingIsCompleted(itemBeforeSorting, interation = 0, maxItera
 }
 describe('Sorting home page tests', { tags: ['@smoke']}, () => {
     beforeEach(() => {
-        cy.login(Cypress.env('baseURL'), Cypress.env('username'), Cypress.env('password'))
+        cy.login(URL, username, password)
     })
 
     it('Sort by name "Z to A" and "A to Z"', { cases: [3] }, () => {
