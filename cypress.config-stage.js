@@ -13,11 +13,11 @@ module.exports = defineConfig({
       // implement node event listeners here
     },
     env:{
-        e2e:true,
-        platform:'stage',
-        baseURL:'',
-        username:'',
-        password:''
+      e2e:true,
+      platform:'stage',
+      baseURL:'https://www.saucedemo.com/',
+      username:'standard_user',
+      password:'secret_sauce'
     },
   },
 });

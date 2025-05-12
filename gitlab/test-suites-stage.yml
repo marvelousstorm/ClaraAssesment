@@ -1,4 +1,6 @@
-configFile: "cypress.config-stage.js"
+configFile: "cypress.config-prod.js"
 suites:
   smoke:
     spec: "cypress/e2e/Smoke/*.cy.js"
+  login:
+    spec: "cypress/e2e/Smoke/login.cy.js"
