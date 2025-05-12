@@ -19,3 +19,9 @@ This project uses Cypress for end-to-end testing.
 
 ### Run QA Challenge tests - Terminal in Production
 > **`npm run run:prod`** — Runs the Cypress tests using the production config file via terminal.
+
+### Run QA Challenge tests - Cypress Dashboard in Stage
+> **`npm run open:stage`** — Opens the Cypress Dashboard using the stage config file.
+
+### Run QA Challenge tests - Terminal in Stage
+> **`npm run run:stage`** — Runs the Cypress tests using the stage config file via terminal.
