@@ -33,6 +33,8 @@ This project uses Cypress for end-to-end testing.
 3. Click **New pipeline** button
 4. Select branch where you want to run the pipeline, dafault value is **master**
 5. You will see a **Variables** section
-    - You can leave it blank if you ant to run entire **smoke** suite in **production** environment
-    - If you want to run another suite in prod, add the suite path to **gitlab** folder on **prod** config file or check of the suite you want alrady is added.
-    - Once the path is in **prod** config file, return to gitlab and add a vriable with key **SUITE_NAME** and in value put exactly the same name you put to the suite in **prod** config file.
+    ### Prod environment
+    - You can leave it blank if you ant to run entire **smoke** suite in **production** environment, just click **New pipeline** button and then execute the pipeline manually.
+    - If you want to run another suite in prod, add the suite path to **gitlab** folder on **test-suite-prod.yml** file or check of the suite you want alrady is added.
+    - Once the path is in **prod** yml file, return to gitlab and add a variable with key **SUITE_NAME** and in value put exactly the same name you put to the suite in **prod** yml file.
+    - Click **New pipeline** button and then execute the pipeline manually.
