@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "open:prod": "npx cypress open --config-file cypress.config-prod.js -b chrome",
+    "run:prod": "npx cypress run --spec \"cypress/e2e/Smoke/*.js\" --config-file cypress.config-prod.js -b chrome",
+    "run:stage": "npx cypress run --spec \"cypress/e2e/Smoke/*.js\" --config-file cypress.config-stage.js -b chrome"
   },
   "keywords": [],
   "author": "",

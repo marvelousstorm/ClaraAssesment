@@ -1,0 +1,21 @@
+# Running Cypress Tests
+This project uses Cypress for end-to-end testing.
+
+# Prerequisites
+>- Make sure you have the following installed:
+
+>- Node.js (v16 or later recommended)
+
+>- npm
+
+>- Cypress installed locally (npm install cypress --save-dev)
+
+# Once repo is cloned in your local follow the next steps
+>- cd your-repo
+>- npm install
+
+### Run QA Challenge tests - Cypress Dashboard in Production
+> **`npm run open:prod`** — Opens the Cypress Dashboard using the production config file.
+
+### Run QA Challenge tests - Terminal in Production
+> **`npm run run:prod`** — Runs the Cypress tests using the production config file via terminal.
