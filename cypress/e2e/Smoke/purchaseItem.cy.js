@@ -28,7 +28,7 @@ function waitUntilTitleChanges(titleBefore, interation = 0, maxIterations = 5) {
         }
     })
 }
-describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
+describe('Succesfully purchase', { tags: ['@smoke'] }, () => {
     before(() => {
         cy.fixture('purchaseItem.json').then((test_data) => {
             testD = (env === 'stage') ? test_data.stage : test_data.production
