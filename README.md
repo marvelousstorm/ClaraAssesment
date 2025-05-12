@@ -30,3 +30,6 @@ This project uses Cypress for end-to-end testing.
 
 - Go to repository in gitlab
 - Click **build** section in the left menu and got to **pipelines** section
+- Click **New pipeline** button
+- Select branch where you want to run the pipeline, dafault value is **master**
+- 
