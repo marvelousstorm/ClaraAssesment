@@ -1,15 +1,14 @@
-import HomePage from "../../support/Pages/homePage";
 import CartPage from "../../support/Pages/cartPage";
 import FirstCheckoutPage from "../../support/Pages/firstCheckoutPage";
 import SecondCheckoutPage from "../../support/Pages/secondCheckoutPage";
 import FinishOrderPage from "../../support/Pages/finishOrderPage";
 
-const homePage = new HomePage();
 const cartPage = new CartPage();
 const firstCheckoutPage = new FirstCheckoutPage();
 const secondCheckoutPage = new SecondCheckoutPage();
 const finishOrderPage = new FinishOrderPage();
-let firstItem, secondItem, buyer, testD
+let buyer, testD
+let items = []
 const URL = Cypress.env('baseURL')
 const username = Cypress.env('username')
 const password = Cypress.env('password')
@@ -32,8 +31,7 @@ describe('Succesfully purchase', { tags: ['@smoke'] }, () => {
     before(() => {
         cy.fixture('purchaseItem.json').then((test_data) => {
             testD = (env === 'stage') ? test_data.stage : test_data.production
-            firstItem = testD.firstItemToPurchase
-            secondItem = testD.secondItemToPurchase
+            items = testD.itemsPurchase
             buyer = testD.buyer
         })
     })
@@ -42,36 +40,9 @@ describe('Succesfully purchase', { tags: ['@smoke'] }, () => {
     })
 
     it('Succesfully purchase more than one item"', { cases: [5] }, () => {
-        homePage.getAddToCartButton(firstItem).scrollIntoView().should('be.visible').click()
-        homePage.getAddToCartButton(secondItem).scrollIntoView().should('be.visible').click()
-        homePage.getRemoveFromCartButton(firstItem).should('exist').and('be.visible').invoke('text').should('eq', 'Remove')
-        homePage.getRemoveFromCartButton(secondItem).should('exist').and('be.visible').invoke('text').should('eq', 'Remove')
-        homePage.getRemoveFromCartButton('').then((elements) => {
-            homePage.getCartContainerCounter().invoke('text').should('eq', elements.length.toString())
-        })
-        homePage.getInventoryitemPrice(firstItem).invoke('text').then((itemPrice) => {
-            cy.wrap(itemPrice).as('firstItemPrice')
-        })
-        homePage.getInventoryitemPrice(secondItem).invoke('text').then((itemPrice) => {
-            cy.wrap(itemPrice).as('secondItemPrice')
-        })
-        homePage.getCartContainerCounter().click()
-        cy.url().should('include', 'cart')
-        cartPage.getTitle().should('be.visible').invoke('text').then((title) => {
-            expect(title.trim()).to.eq('Your Cart')
-        })
-        cartPage.getCartItem(firstItem).should('exist').and('be.visible')
-        cartPage.getCartItem(secondItem).should('exist').and('be.visible')
-        cy.get('@firstItemPrice').then((firstItemPriceInHomePage) => {
-            cartPage.getCartItemPrice(firstItem).invoke('text').then((firstItemPriceInCartPage) => {
-                expect(firstItemPriceInCartPage).to.eq(firstItemPriceInHomePage)
-            })
-        })
-        cy.get('@secondItemPrice').then((secondItemPriceInHomePage) => {
-            cartPage.getCartItemPrice(secondItem).invoke('text').then((secondItemPriceInCartPage) => {
-                expect(secondItemPriceInCartPage).to.eq(secondItemPriceInHomePage)
-            })
-        })
+        cy.log('Adding items to cart: ' + items)
+        cy.addItemsToCart(items)
+        // Check otems in first checkout page
         cartPage.getCheckoutButton().should('be.visible').click()
         cy.url().should('contain', 'checkout')
         firstCheckoutPage.getTitle().should('exist').and('be.visible').invoke('text').then((checkoutTitle) => {
@@ -87,53 +58,53 @@ describe('Succesfully purchase', { tags: ['@smoke'] }, () => {
                 expect(checkoutTitle.trim()).to.include('Checkout: Overview')
             })
         })
-        secondCheckoutPage.getItemInCart(firstItem).should('be.visible').invoke('text').then((firstItemInCart) => {
-            expect(firstItemInCart).to.eq(firstItem)
-        })
-        cy.get('@firstItemPrice').then((firstItemPriceInHomePage) => {
-            let firstPrice = firstItemPriceInHomePage.match(/\$([\d.,]+)/);
-            if (firstPrice) {
-                firstPrice = parseFloat(firstPrice[1].replace(',', ''));
-            }
-            secondCheckoutPage.getItemInCartPrice(firstItem).should('be.visible').invoke('text').then((firstItemInCartPrice) => {
-                expect(firstItemPriceInHomePage).to.eq(firstItemInCartPrice)
+        //Check if items selected are present in the checkout page
+        let priceSum = 0
+        cy.wrap(items).each((itemToPurchase, index) => {
+            secondCheckoutPage.getItemInCart(itemToPurchase).should('be.visible').invoke('text').then((itemInCart) => {
+                expect(items).to.include(itemInCart.trim())
             })
-            cy.get('@secondItemPrice').then((secondItemPriceInHomePage) => {
-                let secondPrice = secondItemPriceInHomePage.match(/\$([\d.,]+)/);
-                if (secondPrice) {
-                    secondPrice = parseFloat(secondPrice[1].replace(',', ''));
+            cy.get('@itemPrices').then((itemPrices) => {
+                let firstPrice = itemPrices[index].match(/\$([\d.,]+)/);
+                if (firstPrice) {
+                    firstPrice = parseFloat(firstPrice[1].replace(',', ''));
+                    priceSum += firstPrice
                 }
-                secondCheckoutPage.getItemInCartPrice(secondItem).should('be.visible').invoke('text').then((secondItemInCartPrice) => {
-                    expect(secondItemPriceInHomePage).to.eq(secondItemInCartPrice)
+                secondCheckoutPage.getItemInCartPrice(itemToPurchase).should('be.visible').invoke('text').then((firstItemInCartPrice) => {
+                    expect(itemPrices[index]).to.eq(firstItemInCartPrice)
                 })
-                secondCheckoutPage.getItemTotalLabel().invoke('text').then((totalItemPrice) => {
-                    const match = totalItemPrice.match(/\$([\d.,]+)/);
-                    if (match) {
-                        const amount = parseFloat(match[1].replace(',', ''));
-                        expect(amount).to.eq(firstPrice + secondPrice)
+            })
+        }).then(() => {
+            cy.wrap(priceSum).as('priceSum')
+            cy.log('Total price of items in cart: ' + priceSum)
+            secondCheckoutPage.getItemTotalLabel().invoke('text').then((totalItemPrice) => {
+                const match = totalItemPrice.match(/\$([\d.,]+)/);
+                if (match) {
+                    const amount = parseFloat(match[1].replace(',', ''));
+                    expect(amount).to.eq(priceSum)
+                }
+            })
+            secondCheckoutPage.getTaxMount().invoke('text').then((tax) => {
+                let taxPrice = tax.match(/\$([\d.,]+)/);
+                if (taxPrice) {
+                    taxPrice = parseFloat(taxPrice[1].replace(',', ''));
+                }
+                secondCheckoutPage.getTotalFee().invoke('text').then((total) => {
+                    let totalFee = total.match(/\$([\d.,]+)/);
+                    if (totalFee) {
+                        totalFee = parseFloat(totalFee[1].replace(',', ''));
+                        expect(totalFee).to.eq(priceSum + taxPrice)
                     }
-                })
-                secondCheckoutPage.getTaxMount().invoke('text').then((tax) => {
-                    let taxPrice = tax.match(/\$([\d.,]+)/);
-                    if (taxPrice) {
-                        taxPrice = parseFloat(taxPrice[1].replace(',', ''));
-                    }
-                    secondCheckoutPage.getTotalFee().invoke('text').then((total) => {
-                        let totalFee= total.match(/\$([\d.,]+)/);
-                        if (totalFee) {
-                            totalFee = parseFloat(totalFee[1].replace(',', ''));
-                            expect(totalFee).to.eq(firstPrice+secondPrice+taxPrice)
-                        }
-                    })
                 })
             })
         })
+        // Finish purchase
         secondCheckoutPage.getFinishButton().should('be.visible').click()
-        cy.url().should('include','checkout-complete')
+        cy.url().should('include', 'checkout-complete')
         firstCheckoutPage.getTitle().should('exist').and('be.visible').invoke('text').then((checkoutTitle) => {
             expect(checkoutTitle.trim()).to.include('Checkout: Complete!')
         })
-        finishOrderPage.getSuccesfullPurchaseMessage().should('be.visible').invoke('text').then((sucessfullMessage)=>{
+        finishOrderPage.getSuccesfullPurchaseMessage().should('be.visible').invoke('text').then((sucessfullMessage) => {
             expect(sucessfullMessage).to.include('Thank you for your order!')
         })
     })
