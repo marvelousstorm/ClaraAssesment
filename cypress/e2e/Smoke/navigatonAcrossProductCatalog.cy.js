@@ -68,7 +68,7 @@ describe('Sorting home page tests', { tags: ['@smoke']}, () => {
             })
         })
     })
-    it.only('Sort by price "high to low" and "low to high"', { cases: [4] }, () => {
+    it('Sort by price "high to low" and "low to high"', { cases: [4] }, () => {
         homePage.getProductsortContainer().should('be.visible').invoke('val').then((val) => {
             homePage.getProductNames().first().invoke('text').then((itemBeforeSorting) => {
                 if (val !== 'lohi') {
