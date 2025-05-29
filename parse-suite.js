@@ -3,9 +3,9 @@ const yaml = require('js-yaml');
 
 // Get the environment variable to decide which file to load
 const env = process.env.ENV || 'prod';  // Default to 'stage' if not set
-const suiteName = process.env.SUITE_NAME || 'smoke';
+const suiteName = process.env.SUITE_NAME || 'smokeUI';
 
-const filePath = env === 'prod' ? 'gitlab/test-suites-prod.yml' : 'gitlab/test-suites-stage.yml';
+const filePath = env === 'prod' ? 'github/test-suites-prod.yml' : 'github/test-suites-stage.yml';
 
 try {
   const config = yaml.load(fs.readFileSync(filePath, 'utf8'));

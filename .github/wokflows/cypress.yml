@@ -1,0 +1,71 @@
+name: Run Cypress Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      suite_name:
+        description: 'Suite to run'
+        required: true
+        default: 'smokeUI'
+        type: choice
+        options:
+          - smokeUI
+          - API
+      env:
+        description: 'Enviroment to run'
+        required: true
+        default: 'prod'
+        type: choice
+        options:
+          - prod
+          - stage
+  push:
+    branches:
+      - main
+
+env:
+  ENV: ${{ github.event.inputs.env || 'prod' }}
+  SUITE_NAME: ${{ github.event.inputs.suite_name || 'smokeUI' }}
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install js-yaml
+
+      - name: Parse suite
+        id: parse
+        run: |
+          eval $(node parse-suite.js)
+          echo "SUITES=$SUITES" >> $GITHUB_ENV
+          echo "CONFIG_FILE=$CONFIG_FILE" >> $GITHUB_ENV
+
+      - name: Start app
+        run: npm start &
+      
+      # - name: Wait for app
+      #   run: npx wait-on http://localhost:3000  # Adjust if needed
+
+      - name: Run Cypress
+        run: npx cypress run --spec "$SUITES" --config-file "$CONFIG_FILE" -b chrome
+
+      - name: Upload Cypress Artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts
+          path: |
+            cypress/screenshots
+            cypress/videos
