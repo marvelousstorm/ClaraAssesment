@@ -1,7 +1,8 @@
+import { expect } from "chai";
 import HomePage from "../../support/Pages/homePage"
 
 const homePage = new HomePage();
-const URL=Cypress.env('baseURL')
+const URL = Cypress.env('baseURL')
 const username = Cypress.env('username')
 const password = Cypress.env('password')
 /* This funcion waits until sorting is completed, it checks that the first element text must not be equal after sorting,
@@ -18,7 +19,7 @@ function waitUntilSortingIsCompleted(itemBeforeSorting, interation = 0, maxItera
         }
     })
 }
-describe('Sorting home page tests', { tags: ['@smoke']}, () => {
+describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
     beforeEach(() => {
         cy.login(URL, username, password)
     })
@@ -33,9 +34,10 @@ describe('Sorting home page tests', { tags: ['@smoke']}, () => {
             })
         })
         let productNamesBeforeSorting = []
-        cy.wrap(productNamesBeforeSorting).as('productNames')
         homePage.getProductNames().each((product) => {
             productNamesBeforeSorting.push(product.text())
+        }).then(() => {
+            cy.wrap(productNamesBeforeSorting).as('productNames')
         })
         //Sorting elements Z to A
         homePage.getProductNames().first().invoke('text').then((itemBeforeSorting) => {
@@ -43,12 +45,10 @@ describe('Sorting home page tests', { tags: ['@smoke']}, () => {
             waitUntilSortingIsCompleted(itemBeforeSorting)
         })
         let productNamesAfterSorting = []
-        cy.wrap(productNamesAfterSorting).as('productNamesAfterSorting')
         homePage.getProductNames().each((product) => {
             productNamesAfterSorting.push(product.text())
-        })
-        cy.get('@productNames').then((productNames) => {
-            cy.get('@productNamesAfterSorting').then((productNamesAfterSorting)=>{
+        }).then(() => {
+            cy.get('@productNames').then((productNames) => {
                 const productNamesSorted = [...productNames].sort((a, b) => b.localeCompare(a));
                 expect(productNamesSorted).to.deep.equal(productNamesAfterSorting)
             })
@@ -61,10 +61,10 @@ describe('Sorting home page tests', { tags: ['@smoke']}, () => {
         })
         homePage.getProductNames().each((product) => {
             productNamesAfterSorting.push(product.text())
-        })
-        cy.get('@productNames').then((productNamesBeforeSorting) => {
-            cy.get('@productNamesAfterSorting').then((productNamesAfterSorting) => {
-                cy.wrap(productNamesBeforeSorting).should('deep.equal',productNamesAfterSorting)
+        }).then(() => {
+            cy.get('@productNames').then((productNames) => {
+                const productNamesSorted = [...productNames].sort((a, b) => a.localeCompare(b));
+                expect(productNamesSorted).to.deep.equal(productNamesAfterSorting)
             })
         })
     })
@@ -78,9 +78,10 @@ describe('Sorting home page tests', { tags: ['@smoke']}, () => {
             })
         })
         let pricesBeforeSorting = []
-        cy.wrap(pricesBeforeSorting).as('productPrices')
         homePage.getInvetoryItemPrice().each((prices) => {
             pricesBeforeSorting.push(parseFloat(prices.text().replace(/[^0-9.]/g, '')))
+        }).then(() => {
+            cy.wrap(pricesBeforeSorting).as('productPrices')
         })
         //Sorting elements high price to low price
         homePage.getInvetoryItemPrice().first().invoke('text').then((itemBeforeSorting) => {
@@ -88,12 +89,10 @@ describe('Sorting home page tests', { tags: ['@smoke']}, () => {
             waitUntilSortingIsCompleted(itemBeforeSorting)
         })
         let productPricesAfterSorting = []
-        cy.wrap(productPricesAfterSorting).as('productPricesAfterSorting')
         homePage.getInvetoryItemPrice().each((prices) => {
             productPricesAfterSorting.push(parseFloat(prices.text().replace(/[^0-9.]/g, '')))
-        })
-        cy.get('@productPrices').then((productPrices) => {
-            cy.get('@productPricesAfterSorting').then((productPricesAfterSorting)=>{
+        }).then(() => {
+            cy.get('@productPrices').then((productPrices) => {
                 const productPricesSorted = [...productPrices].sort((a, b) => b - a);
                 expect(productPricesSorted).to.deep.equal(productPricesAfterSorting)
             })
@@ -106,11 +105,11 @@ describe('Sorting home page tests', { tags: ['@smoke']}, () => {
         })
         homePage.getInvetoryItemPrice().each((prices) => {
             productPricesAfterSorting.push(parseFloat(prices.text().replace(/[^0-9.]/g, '')))
-        })
-        cy.get('@productPrices').then((productPrices) => {
-            cy.get('@productPricesAfterSorting').then((productPricesAfterSorting) => {
-                const productPricesSorted = [...productPrices].sort((a, b) => b - a);
+        }).then(() => {
+            cy.get('@productPrices').then((productPrices) => {
+                const productPricesSorted = [...productPrices].sort((a, b) => a - b);
                 expect(productPricesSorted).to.deep.equal(productPricesAfterSorting)
+
             })
         })
     })
