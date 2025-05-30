@@ -35,8 +35,9 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
             })
         })
         //Sorting elements A to Z
-        homePage.getProductsortContainer().select('az')
-        productNamesAfterSorting = []
+        homePage.getProductsortContainer().select('az').then(()=>{
+            productNamesAfterSorting = []
+        })
         homePage.getProductNames().each((product) => {
             productNamesAfterSorting.push(product.text())
         }).then(() => {
@@ -70,8 +71,9 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
             })
         })
         //Sorting elements low price to high price
-        homePage.getProductsortContainer().select('lohi')
-        productPricesAfterSorting = []
+        homePage.getProductsortContainer().select('lohi').then(() => {
+            productPricesAfterSorting = []
+        })
         homePage.getInvetoryItemPrice().each((prices) => {
             productPricesAfterSorting.push(parseFloat(prices.text().replace(/[^0-9.]/g, '')))
         }).then(() => {
