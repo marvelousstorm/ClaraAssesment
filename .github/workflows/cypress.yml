@@ -9,7 +9,7 @@ on:
         default: 'smokeUI'
         type: choice
         options:
-          - SMOKE
+          - smoke
           - smokeUI
           - API
       env:
@@ -23,13 +23,14 @@ on:
 
 env:
   ENV: ${{ github.event.inputs.env || 'prod' }}
-  SUITE_NAME: ${{ github.event.inputs.suite_name || 'smokeUI' }}
 
 jobs:
   smoke-ui:
     if: ${{ github.event.inputs.suite_name == 'smoke' || github.event.inputs.suite_name == 'smokeUI' }}
     name: Run Smoke UI
     runs-on: ubuntu-latest
+    env:
+      SUITE_NAME: smokeUI
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -47,8 +48,7 @@ jobs:
       - name: Parse suite
         id: parse
         run: |
-          export SUITES='cypress/e2e/ui/**/*.cy.js'
-          export CONFIG_FILE='cypress.config.js'
+          eval $(node parse-suite.js)
           echo "SUITES=$SUITES" >> $GITHUB_ENV
           echo "CONFIG_FILE=$CONFIG_FILE" >> $GITHUB_ENV
 
@@ -62,6 +62,8 @@ jobs:
     if: ${{ github.event.inputs.suite_name == 'smoke' || github.event.inputs.suite_name == 'API' }}
     name: Run Smoke API
     runs-on: ubuntu-latest
+    env:
+      SUITE_NAME: API
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -79,8 +81,7 @@ jobs:
       - name: Parse suite
         id: parse
         run: |
-          export SUITES='cypress/e2e/api/**/*.cy.js'
-          export CONFIG_FILE='cypress.config.api.js'
+          eval $(node parse-suite.js)
           echo "SUITES=$SUITES" >> $GITHUB_ENV
           echo "CONFIG_FILE=$CONFIG_FILE" >> $GITHUB_ENV
 
