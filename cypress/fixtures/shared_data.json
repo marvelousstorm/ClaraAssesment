@@ -1,0 +1,12 @@
+{
+  "stage": {
+    "CRUDAPI": {
+      "uniqueId": ""
+    }
+  },
+  "production": {
+    "CRUDAPI": {
+      "uniqueId": ""
+    }
+  }
+}

@@ -3,12 +3,28 @@
         "loginAPI": {
             "email": "eve.holt@reqres.in",
             "password": "cityslicka"
+        },
+        "CRUDAPI": {
+            "name": "morpheus",
+            "job": "leader",
+            "job_edited": "zion resident",
+            "firstName": "Janet",
+            "lastName": "Weaver",
+            "email": "janet.weaver@reqres.in"
         }
     },
     "production": {
         "loginAPI": {
             "email": "eve.holt@reqres.in",
             "password": "cityslicka"
+        },
+        "CRUDAPI": {
+            "name": "morpheus",
+            "job": "leader",
+            "job_edited": "zion resident",
+            "firstName": "Janet",
+            "lastName": "Weaver",
+            "email": "janet.weaver@reqres.in"
         }
     }
 }
