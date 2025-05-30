@@ -37,12 +37,10 @@ describe('Succesfully purchase', { tags: ['@smoke'] }, () => {
         firstCheckoutPage.getFirstNameInput().type(buyer.firstName)
         firstCheckoutPage.getLastNameInput().type(buyer.lastName)
         firstCheckoutPage.getZipInput().type(buyer.zip)
-        firstCheckoutPage.getTitle().invoke('text').then((titleBefore) => {
             firstCheckoutPage.getContinueButton().should('be.visible').click()
             firstCheckoutPage.getTitle().should('exist').and('be.visible').invoke('text').then((checkoutTitle) => {
                 expect(checkoutTitle.trim()).to.include('Checkout: Overview')
             })
-        })
         //Check if items selected are present in the checkout page
         let priceSum = 0
         cy.wrap(items).each((itemToPurchase, index) => {

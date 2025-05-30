@@ -13,11 +13,9 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
 
     it('Sort by name "Z to A" and "A to Z"', { cases: [3] }, () => {
         homePage.getProductsortContainer().should('be.visible').invoke('val').then((val) => {
-            homePage.getProductNames().first().invoke('text').then((itemBeforeSorting) => {
-                if (val !== 'az') {
-                    homePage.getProductsortContainer().select('az')
-                }
-            })
+            if (val !== 'az') {
+                homePage.getProductsortContainer().select('az')
+            }
         })
         let productNamesBeforeSorting = []
         homePage.getProductNames().each((product) => {
@@ -26,9 +24,7 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
             cy.wrap(productNamesBeforeSorting).as('productNames')
         })
         //Sorting elements Z to A
-        homePage.getProductNames().first().invoke('text').then((itemBeforeSorting) => {
-            homePage.getProductsortContainer().select('za')
-        })
+        homePage.getProductsortContainer().select('za')
         let productNamesAfterSorting = []
         homePage.getProductNames().each((product) => {
             productNamesAfterSorting.push(product.text())
@@ -39,10 +35,8 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
             })
         })
         //Sorting elements A to Z
-        homePage.getProductNames().first().invoke('text').then((itemBeforeSorting) => {
-            homePage.getProductsortContainer().select('az')
-            productNamesAfterSorting = []
-        })
+        homePage.getProductsortContainer().select('az')
+        productNamesAfterSorting = []
         homePage.getProductNames().each((product) => {
             productNamesAfterSorting.push(product.text())
         }).then(() => {
@@ -54,11 +48,9 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
     })
     it('Sort by price "high to low" and "low to high"', { cases: [4] }, () => {
         homePage.getProductsortContainer().should('be.visible').invoke('val').then((val) => {
-            homePage.getProductNames().first().invoke('text').then((itemBeforeSorting) => {
-                if (val !== 'lohi') {
-                    homePage.getProductsortContainer().select('lohi')
-                }
-            })
+            if (val !== 'lohi') {
+                homePage.getProductsortContainer().select('lohi')
+            }
         })
         let pricesBeforeSorting = []
         homePage.getInvetoryItemPrice().each((prices) => {
@@ -67,9 +59,7 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
             cy.wrap(pricesBeforeSorting).as('productPrices')
         })
         //Sorting elements high price to low price
-        homePage.getInvetoryItemPrice().first().invoke('text').then((itemBeforeSorting) => {
-            homePage.getProductsortContainer().select('hilo')
-        })
+        homePage.getProductsortContainer().select('hilo')
         let productPricesAfterSorting = []
         homePage.getInvetoryItemPrice().each((prices) => {
             productPricesAfterSorting.push(parseFloat(prices.text().replace(/[^0-9.]/g, '')))
@@ -80,10 +70,8 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
             })
         })
         //Sorting elements low price to high price
-        homePage.getInvetoryItemPrice().first().invoke('text').then((itemBeforeSorting) => {
-            homePage.getProductsortContainer().select('lohi')
-            productPricesAfterSorting = []
-        })
+        homePage.getProductsortContainer().select('lohi')
+        productPricesAfterSorting = []
         homePage.getInvetoryItemPrice().each((prices) => {
             productPricesAfterSorting.push(parseFloat(prices.text().replace(/[^0-9.]/g, '')))
         }).then(() => {
