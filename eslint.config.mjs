@@ -22,7 +22,7 @@ export default defineConfig([
     },
     rules: {
       ...pluginCypress.configs.recommended.rules,
-      'cypress/unsafe-to-chain-command': 'off', // Optional override
+      'cypress/unsafe-to-chain-command': 'off',
     },
   },
 ]);
