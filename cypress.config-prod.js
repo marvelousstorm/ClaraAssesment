@@ -17,7 +17,9 @@ module.exports = defineConfig({
       platform: 'production',
       baseURL: 'https://www.saucedemo.com/',
       username: 'standard_user',
-      password: 'secret_sauce'
+      password: 'secret_sauce',
+      apiURL: 'https://reqres.in/api/',
+      apiKey: 'reqres-free-v1'
     },
   },
 });

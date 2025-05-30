@@ -1,0 +1,14 @@
+{
+    "stage": {
+        "loginAPI": {
+            "email": "eve.holt@reqres.in",
+            "password": "cityslicka"
+        }
+    },
+    "production": {
+        "loginAPI": {
+            "email": "eve.holt@reqres.in",
+            "password": "cityslicka"
+        }
+    }
+}
