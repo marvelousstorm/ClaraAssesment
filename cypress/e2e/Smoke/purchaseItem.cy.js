@@ -13,20 +13,6 @@ const URL = Cypress.env('baseURL')
 const username = Cypress.env('username')
 const password = Cypress.env('password')
 const env = Cypress.env('platform')
-/* This funcion waits until sorting is completed, it checks that the first element text must not be equal after sorting,
-    so once it is different it lets the program continue, if not, it will wait 500 ms to check again and will repeat 5 times*/
-// function waitUntilTitleChanges(titleBefore, interation = 0, maxIterations = 5) {
-//     if (interation >= maxIterations) return
-//     firstCheckoutPage.getTitle().invoke('text').then((titleAfter) => {
-//         if (titleBefore === titleAfter) {
-//             // cy.wait(500)
-//             waitUntilTitleChanges(titleBefore, interation + 1, maxIterations)
-//         }
-//         else if (titleBefore !== titleAfter) {
-//             return
-//         }
-//     })
-// }
 describe('Succesfully purchase', { tags: ['@smoke'] }, () => {
     before(() => {
         cy.fixture('purchaseItem.json').then((test_data) => {
@@ -51,13 +37,10 @@ describe('Succesfully purchase', { tags: ['@smoke'] }, () => {
         firstCheckoutPage.getFirstNameInput().type(buyer.firstName)
         firstCheckoutPage.getLastNameInput().type(buyer.lastName)
         firstCheckoutPage.getZipInput().type(buyer.zip)
-        firstCheckoutPage.getTitle().invoke('text').then((titleBefore) => {
             firstCheckoutPage.getContinueButton().should('be.visible').click()
-            // waitUntilTitleChanges(titleBefore)
             firstCheckoutPage.getTitle().should('exist').and('be.visible').invoke('text').then((checkoutTitle) => {
                 expect(checkoutTitle.trim()).to.include('Checkout: Overview')
             })
-        })
         //Check if items selected are present in the checkout page
         let priceSum = 0
         cy.wrap(items).each((itemToPurchase, index) => {
