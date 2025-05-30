@@ -5,20 +5,20 @@ const homePage = new HomePage();
 const URL = Cypress.env('baseURL')
 const username = Cypress.env('username')
 const password = Cypress.env('password')
-/* This funcion waits until sorting is completed, it checks that the first element text must not be equal after sorting,
-    so once it is different it lets the program continue, if not, it will wait 500 ms to check again and will repeat 5 times*/
-function waitUntilSortingIsCompleted(itemBeforeSorting, interation = 0, maxIterations = 5) {
-    if (interation >= maxIterations) return
-    homePage.getProductNames().first().invoke('text').then((itemAfterSorting) => {
-        if (itemBeforeSorting === itemAfterSorting) {
-            cy.wait(500)
-            waitUntilSortingIsCompleted(itemBeforeSorting, interation + 1, maxIterations)
-        }
-        else if (itemBeforeSorting !== itemAfterSorting) {
-            return
-        }
-    })
-}
+// /* This funcion waits until sorting is completed, it checks that the first element text must not be equal after sorting,
+//     so once it is different it lets the program continue, if not, it will wait 500 ms to check again and will repeat 5 times*/
+// function waitUntilSortingIsCompleted(itemBeforeSorting, interation = 0, maxIterations = 5) {
+//     if (interation >= maxIterations) return
+//     homePage.getProductNames().first().invoke('text').then((itemAfterSorting) => {
+//         if (itemBeforeSorting === itemAfterSorting) {
+//             // cy.wait(500)
+//             waitUntilSortingIsCompleted(itemBeforeSorting, interation + 1, maxIterations)
+//         }
+//         else if (itemBeforeSorting !== itemAfterSorting) {
+//             return
+//         }
+//     })
+// }
 describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
     beforeEach(() => {
         cy.login(URL, username, password)
@@ -29,7 +29,7 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
             homePage.getProductNames().first().invoke('text').then((itemBeforeSorting) => {
                 if (val !== 'az') {
                     homePage.getProductsortContainer().select('az')
-                    waitUntilSortingIsCompleted(itemBeforeSorting)
+                    // waitUntilSortingIsCompleted(itemBeforeSorting)
                 }
             })
         })
@@ -42,7 +42,7 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
         //Sorting elements Z to A
         homePage.getProductNames().first().invoke('text').then((itemBeforeSorting) => {
             homePage.getProductsortContainer().select('za')
-            waitUntilSortingIsCompleted(itemBeforeSorting)
+            // waitUntilSortingIsCompleted(itemBeforeSorting)
         })
         let productNamesAfterSorting = []
         homePage.getProductNames().each((product) => {
@@ -56,7 +56,7 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
         //Sorting elements A to Z
         homePage.getProductNames().first().invoke('text').then((itemBeforeSorting) => {
             homePage.getProductsortContainer().select('az')
-            waitUntilSortingIsCompleted(itemBeforeSorting)
+            // waitUntilSortingIsCompleted(itemBeforeSorting)
             productNamesAfterSorting = []
         })
         homePage.getProductNames().each((product) => {
@@ -73,7 +73,7 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
             homePage.getProductNames().first().invoke('text').then((itemBeforeSorting) => {
                 if (val !== 'lohi') {
                     homePage.getProductsortContainer().select('lohi')
-                    waitUntilSortingIsCompleted(itemBeforeSorting)
+                    // waitUntilSortingIsCompleted(itemBeforeSorting)
                 }
             })
         })
@@ -86,7 +86,7 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
         //Sorting elements high price to low price
         homePage.getInvetoryItemPrice().first().invoke('text').then((itemBeforeSorting) => {
             homePage.getProductsortContainer().select('hilo')
-            waitUntilSortingIsCompleted(itemBeforeSorting)
+            // waitUntilSortingIsCompleted(itemBeforeSorting)
         })
         let productPricesAfterSorting = []
         homePage.getInvetoryItemPrice().each((prices) => {
@@ -100,7 +100,7 @@ describe('Sorting home page tests', { tags: ['@smoke'] }, () => {
         //Sorting elements low price to high price
         homePage.getInvetoryItemPrice().first().invoke('text').then((itemBeforeSorting) => {
             homePage.getProductsortContainer().select('lohi')
-            waitUntilSortingIsCompleted(itemBeforeSorting)
+            // waitUntilSortingIsCompleted(itemBeforeSorting)
             productPricesAfterSorting = []
         })
         homePage.getInvetoryItemPrice().each((prices) => {
