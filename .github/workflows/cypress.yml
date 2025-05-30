@@ -9,28 +9,28 @@ on:
         default: 'smokeUI'
         type: choice
         options:
+          - smoke
           - smokeUI
           - API
       env:
-        description: 'Enviroment to run'
+        description: 'Environment to run'
         required: true
         default: 'prod'
         type: choice
         options:
           - prod
           - stage
-  push:
-    branches:
-      - main
 
 env:
   ENV: ${{ github.event.inputs.env || 'prod' }}
-  SUITE_NAME: ${{ github.event.inputs.suite_name || 'smokeUI' }}
 
 jobs:
-  cypress-run:
+  smoke-ui:
+    if: ${{ github.event.inputs.suite_name == 'smoke' || github.event.inputs.suite_name == 'smokeUI' }}
+    name: Run Smoke UI
     runs-on: ubuntu-latest
-
+    env:
+      SUITE_NAME: smokeUI
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -54,18 +54,36 @@ jobs:
 
       - name: Start app
         run: npm start &
-      
-      # - name: Wait for app
-      #   run: npx wait-on http://localhost:3000  # Adjust if needed
 
-      - name: Run Cypress
+      - name: Run Cypress Smoke UI
         run: npx cypress run --spec "$SUITES" --config-file "$CONFIG_FILE" -b chrome
 
-      - name: Upload Cypress Artifacts
-        if: failure()
-        uses: actions/upload-artifact@v4
+  smoke-api:
+    if: ${{ github.event.inputs.suite_name == 'smoke' || github.event.inputs.suite_name == 'API' }}
+    name: Run Smoke API
+    runs-on: ubuntu-latest
+    env:
+      SUITE_NAME: API
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          name: cypress-artifacts
-          path: |
-            cypress/screenshots
-            cypress/videos
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install js-yaml
+
+      - name: Parse suite
+        id: parse
+        run: |
+          eval $(node parse-suite.js)
+          echo "SUITES=$SUITES" >> $GITHUB_ENV
+          echo "CONFIG_FILE=$CONFIG_FILE" >> $GITHUB_ENV
+
+      - name: Run Cypress Smoke API
+        run: npx cypress run --spec "$SUITES" --config-file "$CONFIG_FILE" -b chrome
